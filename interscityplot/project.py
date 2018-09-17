@@ -1,9 +1,11 @@
 import argparse
+import os, pathlib
+import pandas as pd
 
 
 def run(cmd, args):
     if cmd == 'start':
-        name, csv_file, nrows = get_start_args(args)
+        name, csv_file, nrows = get_project_attrs_from_args(args)
         start_project(name, csv_file, nrows)
     else:
         print("Command '%s' not implemented!" % cmd)
@@ -19,12 +21,25 @@ def start_project(name, input_csv, nrows):
     print("Project '%s' created!" % name)
     pass
 
-######################################
-# Command line arguments and commands
-######################################
 
-def get_start_args(args):
-    return args['name'], args['file'], ['sample']
+def create_project_files(name):
+    try:
+        os.mkdir(name)
+        os.mkdir(name+'/datasets')
+    except Exception as e:
+        raise e("A Problem occurred when setting up project files")
+    
+def is_csv(file_path):
+    is_file = os.path.isfile(file_path)
+    file_extension = pathlib.Path(file_path).suffix
+
+    return is_file and '.csv' in file_extension
+
+############################################################################
+# Command line arguments and commands
+############################################################################
+def get_project_attrs_from_args(args):
+    return args.get('name'), args.get('file'), args.get('sample')
 
 def adds_parser_args(subparsers):
     adds_start_command(subparsers)
