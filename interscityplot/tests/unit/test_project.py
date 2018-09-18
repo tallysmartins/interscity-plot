@@ -1,16 +1,15 @@
 from ..test_helper import *
 from ...project import *
 import pytest
-import os.path as path
 
 """
 def is_csv(file_path)
 """
 def test_return_true_if_file_is_csv():
-    assert is_csv(path.abspath('./tests/fixtures/simulation.csv'))
+    assert is_csv(fixtures_dir + '/simulation.csv')
 
-def test_return_false_if_file_is_not():
-    assert not is_csv('./tests/fixtures/simulation.txt')
+def test_return_false_if_file_is_not_a_csv():
+    assert not is_csv(fixtures_dir + 'simulation.txt')
 
 def test_return_false_if_file_does_not_exist():
     assert not is_csv('./tests/fixtures/abadubada.shine')

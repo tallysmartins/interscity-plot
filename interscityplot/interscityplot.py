@@ -4,8 +4,8 @@ import argparse
 import glob
 import os
 import sys
-from . import graphics as graphics
-from . import project as project
+import graphics
+import project
 
 __version__ = '0.0.1'
 
