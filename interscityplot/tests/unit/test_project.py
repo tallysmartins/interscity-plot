@@ -10,17 +10,20 @@ class SimplePipeline():
     def run(self):
         pass
 
+
 class OtherSimplePipeline():
     def __init__(self, project):
         self.project = project
     def run(self):
         pass
 
+
 class FailingPipeline():
     def __init__(self, project):
         self.project = project
     def run(self):
         raise Exception('This pipeline is broken')
+
 
 class TestProject(object):
     project_name = 'Project1'
@@ -86,7 +89,6 @@ class TestProject(object):
         assert path.isdir(self.project_name)
         assert path.isdir(self.datasets)
 
-        # cleaning
         delete_folder(self.project_name)
 
     def test_should_return_proper_error_when_project_already_exists(self):
