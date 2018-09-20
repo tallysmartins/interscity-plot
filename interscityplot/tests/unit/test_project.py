@@ -1,33 +1,30 @@
-from ..test_helper import *
-from ...project import *
 import pytest
 
-"""
-def is_csv(file_path)
-"""
-def test_return_true_if_file_is_csv():
-    assert is_csv(fixtures_dir + '/simulation.csv')
+from ..test_helper import *
+from interscityplot.project import *
 
-def test_return_false_if_file_is_not_a_csv():
-    assert not is_csv(fixtures_dir + 'simulation.txt')
-
-def test_return_false_if_file_does_not_exist():
-    assert not is_csv('./tests/fixtures/abadubada.shine')
-
-"""
-def create_project_files(name)
-"""
-def test_create_project_files_given_project_name(): 
+class TestProject(object):
     project_name = 'Project1'
     datasets = 'Project1/datasets'
+    csv = 'mycsv.csv'
 
-    assert not path.isdir(project_name)
+    def test_should_should_be_able_to_create_project_files(self): 
+        assert not path.isdir(self.project_name)
 
-    create_project_files(project_name)
+        project = Project(self.project_name, self.csv)
+        project.create_project_files()
 
-    assert path.isdir(project_name)
-    assert path.isdir(datasets)
+        assert path.isdir(self.project_name)
+        assert path.isdir(self.datasets)
 
-    # cleaning
-    delete_folder(project_name)
+        # cleaning
+        delete_folder(self.project_name)
 
+    def test_should_return_error_when_project_already_exists(self):
+        project = Project(self.project_name, self.csv)
+        project.create_project_files()
+
+        with pytest.raises(Exception): 
+            project.create_project_files()
+
+        delete_folder(self.project_name)

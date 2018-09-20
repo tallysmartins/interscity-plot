@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from setuptools import setup, find_packages
-import howdoi
 import os
 
 def extra_dependencies():
@@ -47,7 +46,7 @@ setup(
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            'interscity-plot = interscityplot.interscityplot:cli_runner',
+            'interscity-plot = interscityplot.cli.main_cli:cli_runner',
         ]
     },
     install_requires=[
