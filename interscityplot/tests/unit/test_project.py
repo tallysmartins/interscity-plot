@@ -24,8 +24,7 @@ class FailingPipeline():
     def run(self):
         raise Exception('This pipeline is broken')
 
-
-class TestProject(object):
+class TestProject():
     project_name = 'Project1'
     datasets = 'Project1/datasets'
     csv = 'mycsv.csv'

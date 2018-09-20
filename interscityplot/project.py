@@ -20,7 +20,7 @@ class Project():
         self.nrows = nrows
         self.processed = None
         self.pipeline_runs = 0
-        self.pipelines = set(pipelines)
+        self.pipelines = pipelines
         self.datasets_dir = self.name + '/datasets'
 
     def run(self) -> bool:
