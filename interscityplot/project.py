@@ -7,7 +7,7 @@ from typing import Dict, Tuple
 class Summary():
     def __init__(self, project):
         self.project = project
-        
+
     def run():
         print("Running Summary Pipeline")
 
@@ -26,17 +26,18 @@ class Project():
         self.processed = None
         self.pipelines = [Summary]
 
-    def run(self):
+    def run(self) -> None:
         self.process_dataset()
         self.save()
 
-    def process_dataset(self):
+    def process_dataset(self) -> bool:
         print("Processing dataset . . . .")
-        for pipeline in self.pipelines:
+        for index, pipeline in enumerate(self.pipelines):
             pipeline(self)
             pipeline.run()
         self.processed = True
-        print("Finished processing")
+
+        return index + 1
 
     def save(self):
         """
@@ -55,7 +56,9 @@ class Project():
             os.mkdir(self.name)
             os.mkdir(self.name + '/datasets')
         except FileExistsError as e:
-            raise Exception("Oops! Looks like a project called '%s' already exists in this folder" % self.name)
+            raise Exception("Oops! Looks like a project named '%s' already exists in this folder" % self.name)
+        except PermissionError as e:
+            raise Exception("No permission to create project files in this folder")
         except Exception as e:
             raise e
 
@@ -68,5 +71,7 @@ class Project():
         try:
             shutil.rmtree(name)
             print("Project deleted!" % name)
+        except FileNotFoundError as e:
+            raise Exception("%s not found, please check the project name and try again" % name)
         except Exception as e:
             print(e)

@@ -36,6 +36,9 @@ def run_command():
     args = vars(parser.parse_args())
     cmd = args['command']
 
+    if cmd == None:
+        parser.print_help()
+
     if args['version']:
         print('InterscityPlot version (%s)' % __version__)
         return
