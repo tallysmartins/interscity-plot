@@ -10,7 +10,7 @@ class TestProject(object):
 
 
     """
-    def process_dataset(self) -> None
+    def process_dataset(self) -> bool
     """
     def test_project_should_have_status_processed_equal_to_true(self):
         project = Project(self.project_name, self.csv)
