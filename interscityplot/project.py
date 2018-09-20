@@ -1,49 +1,45 @@
-import argparse
-import os, pathlib
-import pandas as pd
 import shutil
+import os, pathlib
 from typing import Dict, Tuple
 
-class Summary():
-    def __init__(self, project):
-        self.project = project
-
-    def run():
-        print("Running Summary Pipeline")
+import argparse
+import pandas as pd
+from . pipelines import SummaryStats
 
 class Project():
     """
     Initialize new project class with following attributes
 
-    :param name:
+    :param name: name of the project (also used as the project folder name)
     :param input_csv: csv file containing the simulation dataset
     :param nrows: integer value to be used as sample size of the dataset
     """
-    def __init__(self, name: str, input_csv: str, nrows:int=None) -> object:
+    def __init__(self, name: str, input_csv: str, nrows:int=None, pipelines=[]) -> object:
         self.name = name
         self.input_csv = input_csv
         self.nrows = nrows
         self.processed = None
-        self.pipelines = [Summary]
+        self.pipeline_runs = 0
+        self.pipelines = set(pipelines)
+        self.datasets_dir = self.name + '/datasets'
 
-    def run(self) -> None:
-        self.process_dataset()
-        self.save()
+    def run(self) -> bool:
+        self.pipeline_runs = 0
+        for pipeline in self.pipelines:
+            try:
+                pipeline(self).run()
+                self.pipeline_runs += 1
+            except Exception as e:
+                print("\nError executing the '%s' pipeline" % pipeline.__name__)
+                raise e
 
-    def process_dataset(self) -> bool:
-        print("Processing dataset . . . .")
-        for index, pipeline in enumerate(self.pipelines):
-            pipeline(self)
-            pipeline.run()
         self.processed = True
 
-        return index + 1
+    def add_pipeline(self, pipeline):
+        self.pipelines.add(pipeline)
 
-    def save(self):
-        """
-        Save project attributes to .meta file.
-        """
-        print("saving")
+    def remove_pipeline(self, pipeline):
+        self.pipelines.discard(pipeline)
 
     def create_project_files(self) -> None:
         """
@@ -54,7 +50,7 @@ class Project():
         """
         try:
             os.mkdir(self.name)
-            os.mkdir(self.name + '/datasets')
+            os.mkdir(self.datasets_dir)
         except FileExistsError as e:
             raise Exception("Oops! Looks like a project named '%s' already exists in this folder" % self.name)
         except PermissionError as e:

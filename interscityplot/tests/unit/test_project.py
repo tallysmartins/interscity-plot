@@ -3,6 +3,25 @@ import pytest
 from ..test_helper import *
 from interscityplot.project import *
 
+
+class SimplePipeline():
+    def __init__(self, project):
+        self.project = project
+    def run(self):
+        pass
+
+class OtherSimplePipeline():
+    def __init__(self, project):
+        self.project = project
+    def run(self):
+        pass
+
+class FailingPipeline():
+    def __init__(self, project):
+        self.project = project
+    def run(self):
+        raise Exception('This pipeline is broken')
+
 class TestProject(object):
     project_name = 'Project1'
     datasets = 'Project1/datasets'
@@ -10,18 +29,49 @@ class TestProject(object):
 
 
     """
-    def process_dataset(self) -> bool
+    def run(self) -> bool
     """
-    def test_project_should_have_status_processed_equal_to_true(self):
-        project = Project(self.project_name, self.csv)
+    def test_not_break_when_there_is_no_pipelines_to_be_run(self):
+        project = Project(self.project_name, self.csv, pipelines=[])
 
         assert project.processed == None
-        project.process_dataset()
-        assert project.processed
+        assert project.pipeline_runs == 0
 
-    def test_should_return_number_of_pipelines_processed(self):
-        project = Project(self.project_name, self.csv)
-        assert 1 == project.process_dataset()
+        project.run()
+        assert project.processed
+        assert project.pipeline_runs == 0
+
+    def test_should_run_simple_pipeline(self):
+        project = Project(self.project_name, self.csv, pipelines=[SimplePipeline])
+
+        assert project.processed == None
+        assert project.pipeline_runs == 0
+
+        project.run()
+        assert project.processed
+        assert project.pipeline_runs == 1
+
+    def test_should_run_more_than_one_pipeline(self):
+        project = Project(self.project_name, self.csv, pipelines=[SimplePipeline, OtherSimplePipeline])
+
+        assert project.processed == None
+        assert project.pipeline_runs == 0
+
+        project.run()
+        assert project.processed
+        assert project.pipeline_runs == 2
+
+    def test_should_catch_and_stop_when_pipeline_fails(self):
+        project = Project(self.project_name, self.csv, pipelines=[SimplePipeline, FailingPipeline, OtherSimplePipeline])
+
+        assert project.processed == None
+        assert project.pipeline_runs == 0
+
+        with pytest.raises(Exception) as e:
+            project.run()
+
+        assert not project.processed
+        assert project.pipeline_runs == 1
 
 
     """
