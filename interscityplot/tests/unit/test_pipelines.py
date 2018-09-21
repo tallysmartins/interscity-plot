@@ -15,7 +15,7 @@ class TestSummaryStats():
         assert pipeline.csv == 'mycsv'
         assert pipeline.nrows == 10
         assert pipeline.dest_dir == 'myproject'
-        assert pipeline.summary == {}
+        assert pipeline.metrics == {}
         assert pipeline.data == None
 
 
@@ -31,8 +31,6 @@ class TestSummaryStats():
         assert df.size > 1
         assert any(df.columns.values == columns)
 
-    def test_return_None_if_loading_fails(self):
-        df = SummaryStats.load_dataset('anything')
-        assert None == df
-
-
+    def test_raise_if_if_loading_fails(self):
+        with pytest.raises(Exception) as e:
+            df = SummaryStats.load_dataset('anything.csv')

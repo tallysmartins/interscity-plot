@@ -85,5 +85,5 @@ class SummaryStats():
             dataframe = pd.read_csv(csv, nrows=nrows, names=columns, delimiter=";", header=None)
             return dataframe
         except Exception as e:
-            print('Could not load dataset from %s' % csv)
+            print('Failed loading dataset from file %s' % csv)
             raise e

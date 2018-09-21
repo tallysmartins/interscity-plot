@@ -55,8 +55,8 @@ class Project():
         except Exception as e:
             raise e
 
-    @classmethod
-    def delete(self, name: str) -> None:
+    @staticmethod
+    def delete(name: str) -> None:
         """
         Clean up all project files
         :param name: Project name matching the project folder name
