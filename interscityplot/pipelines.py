@@ -40,52 +40,50 @@ class SummaryStats():
         self.csv = project.input_csv
         self.nrows = project.nrows
         self.dest_dir = project.name
-        self.summary = dict()
+        self.metrics = dict()
         self.data = None
 
     def run(self):
-        self.data = self.load_dataset()
-        self.compute_metrics(self.data)
+        self.data = self.load_dataset(self.csv)
+        self.metrics = self.compute_metrics()
+        self.save()
 
-    def save(self):
-        self.save_metrics()
-        #self.clip_unfinished_trips()
-
-    def _clip_unfinished_trips(self):
+    def clip_unfinished_trips(self):
         print('Removing unfinished trips')
 
-    def _compute_metrics(self) -> Dict:
-        if self.data == None: print("No metrics to compute"); return
+    def compute_metrics(self) -> Dict:
+        metrics = dict()
 
-        self.summary['total_datapoints'] = len(self.data)
+        metrics['total_datapoints'] = int(self.data.size)
 
-        return self.summary
+        return metrics
 
-    def _save_metrics(self, save_to='.META'):
-        """
-        Save metrics in the json format inside the project directory.
-
-        :param save_to: name of the file which the metrics will be saved
-        """
-
-        print('Saving project info to %s inside %s' % (save_to, self.dest_dir))
-
+    def save(self, save_to='.META'):
         save_to = self.dest_dir + '/' + save_to
 
-        with open(save_to, 'w') as f:
-            f.write(self.metrics_to_json(metrics))
+        try:
+            with open(save_to, 'w') as f:
+                f.write(self.metrics_to_json())
+            print(self.metrics_to_json())
+        except Exception as e:
+            print("Error when saving metrics to .META")
+            raise e
 
-    def _metrics_to_json(self):
-        return json.dumps(self.metrics, indent=2)
+
+    def metrics_to_json(self):
+        try:
+            return json.dumps(self.metrics, indent=2)
+        except Exception as e:
+            print('Could not convert metrics dict to json')
+            raise e
 
     @staticmethod
     def load_dataset(csv, nrows=None):
         columns = ['time', 'action', 'vid', 'lat', 'lon']
+
         try:
-            dataframe =  pd.read_csv(csv, nrows=nrows, names=columns, delimiter=";", header=None)
+            dataframe = pd.read_csv(csv, nrows=nrows, names=columns, delimiter=";", header=None)
+            return dataframe
         except Exception as e:
             print('Could not load dataset from %s' % csv)
-            dataframe =  None
-
-        return dataframe
-
+            raise e

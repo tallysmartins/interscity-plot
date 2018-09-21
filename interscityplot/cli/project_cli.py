@@ -17,6 +17,7 @@ def run(cmd: str, args: Dict) -> None:
         if cmd == 'start':
             name, csv_file, nrows = get_attrs_from_args(args)
             project = Project(name, csv_file, nrows)
+            project.create_project_files()
             project.run()
         elif cmd == 'delete':
             name, _csv_file, _nrows = get_attrs_from_args(args)

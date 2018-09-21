@@ -14,21 +14,18 @@ class Project():
     :param input_csv: csv file containing the simulation dataset
     :param nrows: integer value to be used as sample size of the dataset
     """
-    def __init__(self, name: str, input_csv: str, nrows:int=None, pipelines=[]) -> object:
+    def __init__(self, name: str, input_csv: str, nrows:int=None, pipelines=[SummaryStats]) -> object:
         self.name = name
         self.input_csv = input_csv
         self.nrows = nrows
         self.processed = None
-        self.pipeline_runs = 0
         self.pipelines = pipelines
         self.datasets_dir = self.name + '/datasets'
 
     def run(self) -> bool:
-        self.pipeline_runs = 0
         for pipeline in self.pipelines:
             try:
                 pipeline(self).run()
-                self.pipeline_runs += 1
             except Exception as e:
                 print("\nError executing the '%s' pipeline" % pipeline.__name__)
                 raise e
