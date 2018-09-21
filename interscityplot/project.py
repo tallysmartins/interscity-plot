@@ -56,6 +56,15 @@ class Project():
             raise e
 
     @staticmethod
+    def describe(name: str) -> None:
+        meta_file_path = name + '/.META'
+        cat_command = 'cat %s' % meta_file_path
+        os.system(cat_command)
+
+        #workaround to have a new line
+        os.system("echo")
+
+    @staticmethod
     def delete(name: str) -> None:
         """
         Clean up all project files
