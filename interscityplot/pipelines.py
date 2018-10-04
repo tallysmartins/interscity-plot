@@ -24,7 +24,7 @@ class SummaryStats():
         which means that the data point with action 'arrival' is missing.
 
         The following metrics are currently computed in the cleaned dataset:
-         - total_datapoints (int): The actual size of the dataset, each entry is a data point
+         - total_datapoints (int): The number of lines in the dataset, each line is a data point
          - first_move (int): The tick of the first action recorded in the simulation
          - stop_time (int): The total time or duration of the simulation given by the number of ticks
          - unique_trips (int): Total number of trips recorded based on the 'vid' <- vehicle id
@@ -54,7 +54,12 @@ class SummaryStats():
     def compute_metrics(self) -> Dict:
         metrics = dict()
 
-        metrics['total_datapoints'] = int(self.data.size)
+        metrics['number_of_datapoints'] = int(self.data.shape[0])
+        #metrics['discarded_datapoints'] =  metrics['number_of_datapoints'] - self.nrows
+        metrics['start_tick'] = int(self.data.iloc[0].time)
+        metrics['stop_tick'] = int(self.data.iloc[-1].time)
+        metrics['unique_vids'] = int(self.data.vid.nunique())
+        metrics['avg_points_per_trip'] = int(metrics['number_of_datapoints']/metrics['unique_vids'])
 
         return metrics
 

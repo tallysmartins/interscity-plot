@@ -55,6 +55,7 @@ class Project():
         except Exception as e:
             raise e
 
+    # TODO do not depend on linux cat command to show the file
     @staticmethod
     def describe(name: str) -> None:
         meta_file_path = name + '/.META'
