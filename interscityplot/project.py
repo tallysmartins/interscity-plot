@@ -1,10 +1,8 @@
 import shutil
-import os, pathlib
-from typing import Dict, Tuple
+import os
 
-import argparse
-import pandas as pd
 from . pipelines import SummaryStats
+
 
 class Project():
     """
@@ -14,7 +12,7 @@ class Project():
     :param input_csv: csv file containing the simulation dataset
     :param nrows: integer value to be used as sample size of the dataset
     """
-    def __init__(self, name: str, input_csv: str, nrows:int=None, pipelines=[SummaryStats]) -> object:
+    def __init__(self, name: str, input_csv: str, nrows: int=None, pipelines=[SummaryStats]) -> object:
         self.name = name
         self.input_csv = input_csv
         self.nrows = nrows
@@ -24,10 +22,11 @@ class Project():
 
     def run(self) -> bool:
         for pipeline in self.pipelines:
+            pipeline_instance = pipeline(self)
             try:
-                pipeline(self).run()
+                pipeline_instance.run()
             except Exception as e:
-                print("\nError executing the '%s' pipeline" % pipeline.__name__)
+                print("\nError running the '%s' pipeline" % pipeline_instance)
                 raise e
 
         self.processed = True
@@ -62,7 +61,7 @@ class Project():
         cat_command = 'cat %s' % meta_file_path
         os.system(cat_command)
 
-        #workaround to have a new line
+        # workaround to have a new line
         os.system("echo")
 
     @staticmethod

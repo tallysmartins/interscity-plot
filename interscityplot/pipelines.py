@@ -45,6 +45,9 @@ class SummaryStats():
         self.metrics = dict()
         self.data = None
 
+    def __str__(self):
+        return self.__name__
+
     def run(self):
         self.data = self.load_dataset(self.csv)
         self.metrics = self.compute_metrics()
