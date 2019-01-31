@@ -1,4 +1,4 @@
-# InterSCityPlot
+# InterSCityPlotter
 
 [![Build Status](https://travis-ci.org/tallysmartins/interscity-plot.svg?branch=master)](https://travis-ci.org/tallysmartins/interscity-plot)
 [![License](https://img.shields.io/cran/l/devtools.svg)](https://github.com/tallysmartins/interscity-plot/blob/master/LICENSE)
@@ -13,7 +13,7 @@ Plot and analyse traffic simulations from the InterSCimulator
 
 ## Installation and Usage
 
-InterSCityPlot was built with Python 3.6 and no other version was tested. To have
+InterSCityPlotter was built with Python 3.6 and no other version was tested. To have
 it, simple clone this repository and run
 
 	$ python3 setup.py
@@ -27,7 +27,7 @@ commands and flags are available:
 
     optional arguments:
       -h, --help      show this help message and exit
-      -v, --version   displays the current version of interscityplot
+      -v, --version   displays the current version of interscityplotter
 
     Command:
       {start,delete}  The command to be run
