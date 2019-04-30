@@ -12,7 +12,12 @@ class Project():
     :param input_csv: csv file containing the simulation dataset
     :param nrows: integer value to be used as sample size of the dataset
     """
-    def __init__(self, name: str, input_csv: str, nrows: int=None, pipelines=[SummaryStats]) -> object:
+    def __init__(
+            self,
+            name: str,
+            input_csv: str,
+            nrows: int=None,
+            pipelines=[SummaryStats]) -> object:
         self.name = name
         self.input_csv = input_csv
         self.nrows = nrows
